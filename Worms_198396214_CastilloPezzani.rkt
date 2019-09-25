@@ -210,7 +210,7 @@
 
 (define (createScene n m e d seed)
   ;(list (consJugadores n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
-  (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 2 m seed (list)) e n m)
+  (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 1 (- m 1) seed (list)) e n m)
   )
 
 
@@ -232,15 +232,15 @@
 
 ;Funcion que crea el obstaculo
 (define (consObs n m seed out)
-  (if (= m 0)
+  (if (= m -1)
       out
-      (consObs n (- m 1) seed (cons (list "Obstaculo" n m 0 0 0 0 "#") out))
+      (consObs n (- m 1) seed (cons (list "Obstaculo" -1 m n  0 0 0 "#") out))
       )
   )
 
 ;Funcion que une la lista de obstaculos
 (define (consObstaculos n m seed out)
-  (if (= n 0)
+  (if (= n -1)
       out
       (consObstaculos (- n 1) m seed (append (consObs n m seed (list)) out))
       )
@@ -410,13 +410,23 @@
       #f
       (if (= contN n)
           str
-          (crearStr n m jugadores enemigos obstaculos scene (+ 1 contN) contM (string-append (crearFila m jugadores enemigos obstaculos scene contN contM str) str "\n"))
+          (crearStr n m jugadores enemigos obstaculos scene (+ 1 contN) contM (string-append (crearFila m jugadores enemigos obstaculos scene contN contM str) "\n" str ))
           )
       )
   )
 
 (define (crearFila m jugadores enemigos obstaculos scene contN contM str)
-  (if (= contM m)
+  (begin
+    (display "N actual:")
+    (display contN)
+    (display "\n")
+    (display "M actual:")
+    (display contM)
+    (display "\n")
+    (display "str\n")
+    (display str)
+    (display "\n")
+    (if (= contM m)
       str
       (if (buscarJugadores jugadores contN contM 0)
           (crearFila m jugadores enemigos obstaculos scene contN (+ 1 contM) (string-append str (buscarJugadores jugadores contN contM 1)))
@@ -429,10 +439,11 @@
               )
           )
       )
+    )
   )
 
 
-(define (buscarJugadores jugadores n m id)
+(define (buscarJugadores jugadores m n id)
   (if (null? jugadores)
       #f
       (if (and (= (getX (car jugadores)) m) (= (getY (car jugadores)) n))
@@ -440,12 +451,12 @@
               #t
               (getCaracter (car jugadores))
               )
-          (buscarJugadores (cdr jugadores) n m id)
+          (buscarJugadores (cdr jugadores) m n id)
           )
       )
   )
 
-(define (buscarEnemigos enemigos n m id)
+(define (buscarEnemigos enemigos m n id)
   (if (null? enemigos)
       #f
       (if (and (= (getX (car enemigos)) m) (= (getY (car enemigos)) n))
@@ -453,7 +464,7 @@
               #t
               (getCaracter (car enemigos))
               )
-          (buscarEnemigos (cdr enemigos) n m id)
+          (buscarEnemigos (cdr enemigos) m n id)
           )
       )
   )
@@ -472,7 +483,7 @@
   )
 |#
 
-(define (buscarObstaculos obstaculos n m id)
+(define (buscarObstaculos obstaculos m n id)
   (if (null? obstaculos)
       #f
       (if (and (= (getX (car obstaculos)) m) (= (getY (car obstaculos)) n))
@@ -480,11 +491,11 @@
               #t
               (getCaracter (car obstaculos))
               )
-          (buscarObstaculos (cdr obstaculos) n m id)
+          (buscarObstaculos (cdr obstaculos) m n id)
           )
       )
   )
 
 
-(sceneToString (createScene 10 5 2 0 15651))
+;(sceneToString (createScene 10 5 2 0 15651))
 
