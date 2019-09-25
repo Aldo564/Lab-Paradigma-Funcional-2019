@@ -23,7 +23,7 @@
 ;coordenada X
 ;coordenada Y
 ;angulo
-;direccion
+;direccion (izq o drch)
 ;pasos
 
 ;################################################################
@@ -80,6 +80,49 @@
 ;angulo variara en cada llamado
 
 ;################################################################
+
+;########################################################################################
+;Bloque Random
+
+;Estas constantes fueron sacadas de https://en.wikipedia.org/wiki/Linear_congruential_generator
+(define a 1103515245)
+(define c 12345)
+(define m 2147483648)
+;Esta función random toma un xn y obtiene el xn+1 de la secuencia de números aleatorios.
+(define myRandom
+  (lambda
+    (xn)
+    (remainder (+ (* a xn) c) m)
+  )
+)
+;Cada vez que pedimos un random, debemos pasar como argumento el random anterior.
+
+
+;Acá un ejemplo que permite generar una lista de números aleatorios.
+;Parámetros:
+;* "cuantos" indica el largo de la lista a generar.
+;* "xActual" valor actual del random, se pasa en cada nivel de recursión de forma actualizada
+;* "maximo" Los números generados van desde 0 hasta maximo-1
+(define getListaRandom
+  (lambda (cuantos xActual maximo)
+    (if (= 0 cuantos)
+        '()
+        (let ((xNvo (myRandom xActual)))
+          (cons (remainder xNvo maximo)
+              (getListaRandom (- cuantos 1) xNvo maximo)
+          )
+        )
+    )
+  )
+)
+
+;Ejemplos getListaRandom
+;(display (getListaRandom 6 5 8))
+;(display (getListaRandom 7 2 3))
+;(display (getListaRandom 8 2 9))
+
+;Fin Random
+;########################################################################################
 
 ;################################################################
 ;Funcion que entrega un numero en donde se movera el disparo en funcon del angulo de entrada
@@ -165,15 +208,31 @@
 ;El jugador debe partir en -90 grados (derecha)
 
 (define (createScene n m e d seed)
-  #t
-  ) 
+  ;(list (consJugadores n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
+  (consObjeto  n m e (* e 2) 0 seed (list) 0)
+  )
+
+;angulo inicial -90 a la derecha (1) y pasos 0
+(define (crearObjeto n m e pasos seed id)
+  (if (< id e)
+      (list "Jugador" id (car (getListaRandom 1 (* seed 2) m)) (car (getListaRandom 1 (* seed 3) n)) -90 1 pasos)
+      (list "Enemigo" id (car (getListaRandom 1 (* seed 2) m)) (car (getListaRandom 1 (* seed 3) n)) 90 0 pasos)
+      )
+  )
+
+(define (consObjeto n m e doble pasos seed out id)
+  (if (= e 0)
+      out
+      (consObjeto n m (- e 1) doble pasos (* seed 2) (cons (crearObjeto n m e pasos seed id) out) (+ id 1))
+      )
+  )
 
 ;################################################################
 
 ;################################################################
 ;se debe usar recursion contraria a createScene (cola)
 
-(define (checksSpace scene)
+(define (checkSpace scene)
   #t
   )
 

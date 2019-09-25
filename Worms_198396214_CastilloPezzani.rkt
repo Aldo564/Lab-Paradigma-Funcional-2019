@@ -208,24 +208,42 @@
 ;El jugador debe partir en -90 grados (derecha)
 
 (define (createScene n m e d seed)
-  (list (consJugador n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
-  )
-
-;angulo inicial -90 a la derecha (1) y pasos 0
-(define (consJugador n m angulo dir pasos seed id)
-  (if (= id 0)
-      (list "Jugador" id (car (getListaRandom 1 (* seed 2) m)) (car (getListaRandom 1 (* seed 3) n)) angulo dir pasos)
-      (list "Enemigo" id (car (getListaRandom 1 (* seed 2) m)) (car (getListaRandom 1 (* seed 3) n)) angulo dir pasos)
-      )
+  ;(list (consJugadores n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
+  (cons (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 2 m seed (list)))
   )
 
 
-(define (consEnemigos n m e angulo dir pasos seed out)
+(define (consObjeto n m e pasos seed out id)
   (if (= e 0)
       out
-      (consEnemigos n m (- e 1) angulo dir pasos (* seed 2) (cons (consJugador n m angulo dir pasos seed e) out))
+      (consObjeto n m (- e 1) pasos (* seed 2) (cons (crearObjeto n m e pasos seed id) out) (+ id 1))
       )
   )
+
+
+;angulo inicial -90 a la derecha (1) y pasos 0
+(define (crearObjeto n m e pasos seed id)
+  (if (< id e)
+      (list "Jugador" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) -90 1 pasos)
+      (list "Enemigo" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) 90 0 pasos)
+      )
+  )
+
+(define (consObs n m seed out)
+  (if (= m 0)
+      out
+      (consObs n (- m 1) seed (cons (list "Obstaculo" n m) out))
+      )
+  )
+
+(define (consObstaculos n m seed out)
+  (if (= n 0)
+      out
+      (consObstaculos (- n 1) m seed (cons (consObs n m seed (list)) out))
+      )
+  )
+
+
 
 ;################################################################
 
