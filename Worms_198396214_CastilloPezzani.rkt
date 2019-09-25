@@ -210,7 +210,7 @@
 
 (define (createScene n m e d seed)
   ;(list (consJugadores n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
-  (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 2 m seed (list)) e)
+  (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 2 m seed (list)) e n m)
   )
 
 
@@ -242,7 +242,7 @@
 (define (consObstaculos n m seed out)
   (if (= n 0)
       out
-      (consObstaculos (- n 1) m seed (cons (consObs n m seed (list)) out))
+      (consObstaculos (- n 1) m seed (append (consObs n m seed (list)) out))
       )
   )
 
@@ -257,6 +257,14 @@
 
 (define (getCantidadObjetos scene)
   (caddr scene)
+  )
+
+(define (getN scene)
+  (cadddr scene)
+  )
+
+(define (getM scene)
+  (cadddr scene)
   )
 
 (define (getObstaculos scene)
@@ -300,7 +308,7 @@
   (car objeto)
   )
 
-(define (gerId objeto)
+(define (getId objeto)
   (cadr objeto)
   )
 
@@ -310,6 +318,22 @@
 
 (define (getY objeto)
   (cadddr objeto)
+  )
+
+(define (getAngulo objeto)
+  (cadr (cdddr objeto))
+  )
+
+(define (getDir objeto)
+  (caddr (cdddr objeto))
+  )
+
+(define (getPasos objeto)
+  (cadddr (cdddr objeto))
+  )
+
+(define (getCaracter objeto)
+  (cadr (cdddr (cdddr objeto)))
   )
 
 ;################################################################
@@ -378,5 +402,89 @@
 ;no usar display ni write dentr de esta funcion
 
 (define (sceneToString scene)
-  #t
+  (crearStr (getN scene) (getM scene) (getJugadores scene) (getEnemigos scene) (getObstaculos scene) scene 0 0 "")
   )
+
+(define (crearStr n m jugadores enemigos obstaculos scene contN contM str)
+  (if (or (= n 0) (= m 0))
+      #f
+      (if (= contN n)
+          str
+          (crearStr n m jugadores enemigos obstaculos scene (+ 1 contN) contM (string-append (crearFila m jugadores enemigos obstaculos scene contN contM str) str "\n"))
+          )
+      )
+  )
+
+(define (crearFila m jugadores enemigos obstaculos scene contN contM str)
+  (if (= contM m)
+      str
+      (if (buscarJugadores jugadores contN contM 0)
+          (crearFila m jugadores enemigos obstaculos scene contN (+ 1 contM) (string-append str (buscarJugadores jugadores contN contM 1)))
+          (if (buscarEnemigos enemigos contN contM 0)
+              (crearFila m jugadores enemigos obstaculos scene contN (+ 1 contM) (string-append str (buscarEnemigos enemigos contN contM 1)))
+              (if (buscarObstaculos obstaculos contN contM 0)
+                  (crearFila m jugadores enemigos obstaculos scene contN (+ 1 contM) (string-append str (buscarObstaculos obstaculos contN contM 1)))
+                  (crearFila m jugadores enemigos obstaculos scene contN (+ 1 contM) (string-append str "."))
+                  )
+              )
+          )
+      )
+  )
+
+
+(define (buscarJugadores jugadores n m id)
+  (if (null? jugadores)
+      #f
+      (if (and (= (getX (car jugadores)) m) (= (getY (car jugadores)) n))
+          (if (= id 0)
+              #t
+              (getCaracter (car jugadores))
+              )
+          (buscarJugadores (cdr jugadores) n m id)
+          )
+      )
+  )
+
+(define (buscarEnemigos enemigos n m id)
+  (if (null? enemigos)
+      #f
+      (if (and (= (getX (car enemigos)) m) (= (getY (car enemigos)) n))
+          (if (= id 0)
+              #t
+              (getCaracter (car enemigos))
+              )
+          (buscarEnemigos (cdr enemigos) n m id)
+          )
+      )
+  )
+
+#|
+(define (buscarObstaculos1 obstaculos n m id)
+  (if (null? obstaculos)
+      #f
+      (if (null? (cdr obstaculos))
+          (buscarObstaculos2 obstaculos n m id)
+          (if ()
+              )
+          ;(buscarObstaculos2 (car obstaculos) n m id)
+          )
+      )
+  )
+|#
+
+(define (buscarObstaculos obstaculos n m id)
+  (if (null? obstaculos)
+      #f
+      (if (and (= (getX (car obstaculos)) m) (= (getY (car obstaculos)) n))
+          (if (= id 0)
+              #t
+              (getCaracter (car obstaculos))
+              )
+          (buscarObstaculos (cdr obstaculos) n m id)
+          )
+      )
+  )
+
+
+(sceneToString (createScene 10 5 2 0 15651))
+
