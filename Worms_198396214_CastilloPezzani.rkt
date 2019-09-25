@@ -209,7 +209,7 @@
 
 (define (createScene n m e d seed)
   ;(list (consJugadores n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
-  (cons (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 2 m seed (list)))
+  (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 2 m seed (list)) e)
   )
 
 
@@ -229,6 +229,7 @@
       )
   )
 
+;Funcion que crea el obstaculo
 (define (consObs n m seed out)
   (if (= m 0)
       out
@@ -236,6 +237,7 @@
       )
   )
 
+;Funcion que une la lista de obstaculos
 (define (consObstaculos n m seed out)
   (if (= n 0)
       out
@@ -243,7 +245,50 @@
       )
   )
 
+;################################################################
 
+;################################################################
+;Selectores
+
+(define (getObjetos scene)
+  (car scene)
+  )
+
+(define (getCantidadObjetos scene)
+  (caddr scene)
+  )
+
+(define (getObstaculos scene)
+  (cadr  scene)
+  )
+
+(define (getJugadores scene)
+  (auxiliarJ (car scene) (list) (getCantidadObjetos scene) 0)
+  )
+
+(define (auxiliarJ objetos out e cont)
+  (if (= cont (* e 2))
+      out
+      (if (< cont e)
+          (auxiliarJ (cdr objetos) out e (+ cont 1))
+          (auxiliarJ (cdr objetos) (cons (car objetos) out) e (+ cont 1))
+          )
+      )
+  )
+
+(define (getEnemigos scene)
+  (auxiliarE (car scene) (list) (getCantidadObjetos scene) 0)
+  )
+
+(define (auxiliarE objetos out e cont)
+  (if (= cont (* e 2))
+      out
+      (if (< cont e)
+          (auxiliarJ (cdr objetos) (cons (car objetos) out) e (+ cont 1))
+          (auxiliarJ (cdr objetos) out e (+ cont 1))
+          )
+      )
+  )
 
 ;################################################################
 
