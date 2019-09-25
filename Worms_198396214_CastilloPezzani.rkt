@@ -8,7 +8,7 @@
 
 
 ;################################################################
-;TDA scene
+;TDA Scene
 
 ;el equipo del jugador (n jugadores)
 ;el equipo de la CPU (n jugadores)
@@ -18,18 +18,19 @@
 ;################################################################
 
 ;################################################################
-;TDA jugador
+;TDA Objeto
 
 ;coordenada X
 ;coordenada Y
 ;angulo
 ;direccion (izq o drch)
 ;pasos
+;caracter
 
 ;################################################################
 
 ;################################################################
-;TDA proyectil
+;TDA Proyectil
 
 ;coordenada X
 ;coordenada Y
@@ -224,8 +225,8 @@
 ;angulo inicial -90 a la derecha (1) y pasos 0
 (define (crearObjeto n m e pasos seed id)
   (if (< id e)
-      (list "Jugador" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) -90 1 pasos)
-      (list "Enemigo" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) 90 0 pasos)
+      (list "Jugador" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) -90 1 pasos "1")
+      (list "Enemigo" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) 90 0 pasos "0")
       )
   )
 
@@ -233,7 +234,7 @@
 (define (consObs n m seed out)
   (if (= m 0)
       out
-      (consObs n (- m 1) seed (cons (list "Obstaculo" n m) out))
+      (consObs n (- m 1) seed (cons (list "Obstaculo" n m 0 0 0 0 "#") out))
       )
   )
 
@@ -248,7 +249,7 @@
 ;################################################################
 
 ;################################################################
-;Selectores
+;Selectores TDA Scene
 
 (define (getObjetos scene)
   (car scene)
@@ -284,10 +285,31 @@
   (if (= cont (* e 2))
       out
       (if (< cont e)
-          (auxiliarJ (cdr objetos) (cons (car objetos) out) e (+ cont 1))
-          (auxiliarJ (cdr objetos) out e (+ cont 1))
+          (auxiliarE (cdr objetos) (cons (car objetos) out) e (+ cont 1))
+          (auxiliarE (cdr objetos) out e (+ cont 1))
           )
       )
+  )
+
+;################################################################
+
+;################################################################
+;Selectores TDA Objeto
+
+(define (getNombre objeto)
+  (car objeto)
+  )
+
+(define (gerId objeto)
+  (cadr objeto)
+  )
+
+(define (getX objeto)
+  (caddr objeto)
+  )
+
+(define (getY objeto)
+  (cadddr objeto)
   )
 
 ;################################################################
