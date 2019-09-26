@@ -225,8 +225,8 @@
 ;angulo inicial -90 a la derecha (1) y pasos 0
 (define (crearObjeto n m e pasos seed id)
   (if (< id e)
-      (list "Jugador" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) -90 1 pasos "1")
-      (list "Enemigo" id (car (getListaRandom 1 (* seed id) m)) (car (getListaRandom 1 (* seed (+ id 1)) n)) 90 0 pasos "0")
+      (list "Jugador" id (+ 2 (car (getListaRandom 1 (* seed id) (- 2 m)))) (+ 2 (car (getListaRandom 1 (* seed (+ id 1)) (- 2 n)))) -90 1 pasos "1")
+      (list "Enemigo" id (+ 2 (car (getListaRandom 1 (* seed id) (- 2 m)))) (+ 2 (car (getListaRandom 1 (* seed (+ id 1)) (- 2 n)))) 90 0 pasos "0")
       )
   )
 
@@ -388,7 +388,7 @@
   )
 
 (define (setN2 objeto n cont cabeza)
-  (if (= cont 2)
+  (if (= cont 3)
       (if (number? n)
           (append (append cabeza (list n)) (cdr objeto))
           #f
@@ -402,7 +402,7 @@
   )
 
 (define (setAngulo2 objeto angulo cont cabeza)
-  (if (= cont 3)
+  (if (= cont 4)
       (if (number? angulo)
           (append (append cabeza (list angulo)) (cdr objeto))
           #f
@@ -416,7 +416,7 @@
   )
 
 (define (setDir2 objeto dir cont cabeza)
-  (if (= cont 3)
+  (if (= cont 5)
       (if (number? dir)
           (append (append cabeza (list dir)) (cdr objeto))
           #f
@@ -430,7 +430,7 @@
   )
 
 (define (setPasos2 objeto pasos cont cabeza)
-  (if (= cont 3)
+  (if (= cont 6)
       (if (number? pasos)
           (append (append cabeza (list pasos)) (cdr objeto))
           #f
@@ -444,7 +444,7 @@
   )
 
 (define (setCaracter2 objeto caracter cont cabeza)
-  (if (= cont 3)
+  (if (= cont 7)
       (if (string? caracter)
           (append (append cabeza (list caracter)) (cdr objeto))
           #f
@@ -458,8 +458,15 @@
 ;################################################################
 ;se debe usar recursion contraria a createScene (cola)
 
-(define (checkSpace scene)
-  #t
+(define (check scene e)
+  (if (and (= (length (getJugadores scene)) e) (= (length (getEnemigos scene)) e))
+      #t
+      #f
+      )
+  )
+
+(define (checkScene scene)
+  (check scene (getCantidadObjetos scene))
   )
 
 ;################################################################
