@@ -213,6 +213,10 @@
   (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 1 (- m 1) seed (list)) e n m)
   )
 
+;(createScene 9 10 3 0 1561)
+;(createScene 10 11 8 0 125)
+;(createScene 12 15 1 0 963)
+
 
 (define (consObjeto n m e pasos seed out id)
   (if (= e 0)
@@ -469,6 +473,10 @@
   (check scene (getCantidadObjetos scene))
   )
 
+;(checkScene (createScene 12 15 5 0 789))
+;(checkScene (createScene 10 10 5 0 457))
+;(checkScene (createScene 10 8 5 0 112))
+
 ;################################################################
 
 ;################################################################
@@ -528,6 +536,11 @@
 (define (sceneToString scene)
   (crearStr (getN scene) (getM scene) (getJugadores scene) (getEnemigos scene) (getObstaculos scene) scene 0 0 "")
   )
+
+;(display (sceneToString (createScene 10 10 3 0 4655465)))
+;(display (sceneToString (createScene 5 10 5 0 54567)))
+;(display (sceneToString (createScene 8 15 3 0 457889)))
+
 
 (define (crearStr n m jugadores enemigos obstaculos scene contN contM str)
   (if (or (= n 0) (= m 0))
