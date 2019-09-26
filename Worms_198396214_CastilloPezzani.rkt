@@ -126,7 +126,10 @@
 ;########################################################################################
 
 ;################################################################
-;Funcion que entrega un numero en donde se movera el disparo en funcon del angulo de entrada
+
+;Funcion que dado un angulo entrega el movimiento en X del proyectil
+;Entrada: Angulo (entero)
+;Salida: Desplazamiento en X (entero)
 
 (define (entregaX angulo)
   (cond
@@ -142,6 +145,10 @@
     ((= angulo -1) 0)
     )
   )
+
+;Funcion que dado un angulo entrega el movimiento en Y del proyectil
+;Entrada: Angulo (entero)
+;Salida: Desplazamiento en Y (entero)
 	
 (define (entregaY angulo)
   (cond
@@ -161,7 +168,10 @@
 ;################################################################
 
 ;################################################################
+
 ;Funcion que cambia el angulo en funcion del tiempo que tiene el proyectil
+;Entrada: Tiempo de vida del proyectil (entero) y angulo (entero)
+;Salida: Angulo (entero)
 
 (define (cambiarAngulo tiempo angulo)
   (if (or (= tiempo 0) (= tiempo 1))
@@ -208,9 +218,19 @@
 ;d dificultad del escenario (cantidad y posicion de obstaculos en el escenario)
 ;El jugador debe partir en -90 grados (derecha)
 
+;Funcion que crea el escenario.
+;Entrada: N (entero), M (entero), e (entero), d (entero) y Seed (entero).
+;Salida: TDA Scene con datos validos.
+
 (define (createScene n m e d seed)
   ;(list (consJugadores n m -90 1 0 seed 0) (consEnemigos n m e 90 0 0 seed (list))) ;agregar obstaculos al escenario 
-  (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 1 (- m 1) seed (list)) e n m)
+  (if (and (number? n) (number? m) (number? e) (number? d) (number? seed))
+      (if (and (> n 0) (> m 0) (>= e 0))
+          (list (consObjeto  n m (* e 2) 0 seed (list) 0) (consObstaculos 1 (- m 1) seed (list)) e n m)
+          #f
+          )
+      #f
+      )
   )
 
 ;(createScene 9 10 3 0 1561)
@@ -606,19 +626,6 @@
       )
   )
 
-#|
-(define (buscarObstaculos1 obstaculos n m id)
-  (if (null? obstaculos)
-      #f
-      (if (null? (cdr obstaculos))
-          (buscarObstaculos2 obstaculos n m id)
-          (if ()
-              )
-          ;(buscarObstaculos2 (car obstaculos) n m id)
-          )
-      )
-  )
-|#
 
 (define (buscarObstaculos obstaculos m n id)
   (if (null? obstaculos)
@@ -633,6 +640,5 @@
       )
   )
 
-
-;(sceneToString (createScene 10 5 2 0 15651))
+;################################################################
 
