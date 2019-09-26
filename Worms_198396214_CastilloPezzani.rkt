@@ -565,25 +565,15 @@
 (define (crearStr n m jugadores enemigos obstaculos scene contN contM str)
   (if (or (= n 0) (= m 0))
       #f
-      (if (= contN n)
+      (if (= contN (+ n 1))
           str
-          (crearStr n m jugadores enemigos obstaculos scene (+ 1 contN) contM (string-append (crearFila m jugadores enemigos obstaculos scene contN contM str) "\n" str ))
+          (crearStr n m jugadores enemigos obstaculos scene (+ 1 contN) contM (string-append (crearFila m jugadores enemigos obstaculos scene contN contM str) "\n"))
           )
       )
   )
 
 (define (crearFila m jugadores enemigos obstaculos scene contN contM str)
-  (begin
-    (display "N actual:")
-    (display contN)
-    (display "\n")
-    (display "M actual:")
-    (display contM)
-    (display "\n")
-    (display "str\n")
-    (display str)
-    (display "\n")
-    (if (= contM m)
+  (if (= contM m)
       str
       (if (buscarJugadores jugadores contN contM 0)
           (crearFila m jugadores enemigos obstaculos scene contN (+ 1 contM) (string-append str (buscarJugadores jugadores contN contM 1)))
@@ -596,7 +586,6 @@
               )
           )
       )
-    )
   )
 
 
@@ -641,4 +630,5 @@
   )
 
 ;################################################################
+
 
