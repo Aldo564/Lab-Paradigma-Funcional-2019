@@ -339,6 +339,123 @@
 ;################################################################
 
 ;################################################################
+;Modificadores TDA Objeto
+
+(define (setNombre objeto nombre)
+  (setNombre2 objeto nombre 0 (list))
+  )
+
+(define (setNombre2 objeto nombre cont cabeza)
+  (if (= cont 0)
+      (if (string? nombre)
+          (cons nombre (cdr objeto))
+          #f
+          )
+      #f
+      )
+  )
+
+(define (setId objeto id)
+  (setId2 objeto id 0 (list))
+  )
+
+(define (setId2 objeto id cont cabeza)
+  (if (= cont 1)
+      (if (number? id)
+          (append (append cabeza (list id)) (cdr objeto))
+          #f
+          )
+      (setId2 (cdr objeto) id (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+(define (setM objeto m)
+  (setM2 objeto m 0 (list))
+  )
+
+(define (setM2 objeto m cont cabeza)
+  (if (= cont 2)
+      (if (number? m)
+          (append (append cabeza (list m)) (cdr objeto))
+          #f
+          )
+      (setM2 (cdr objeto) m (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+(define (setN objeto n)
+  (setN2 objeto n 0 (list))
+  )
+
+(define (setN2 objeto n cont cabeza)
+  (if (= cont 2)
+      (if (number? n)
+          (append (append cabeza (list n)) (cdr objeto))
+          #f
+          )
+      (setN2 (cdr objeto) n (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+(define (setAngulo objeto angulo)
+  (setAngulo2 objeto angulo 0 (list))
+  )
+
+(define (setAngulo2 objeto angulo cont cabeza)
+  (if (= cont 3)
+      (if (number? angulo)
+          (append (append cabeza (list angulo)) (cdr objeto))
+          #f
+          )
+      (setAngulo2 (cdr objeto) angulo (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+(define (setDir objeto dir)
+  (setDir2 objeto dir 0 (list))
+  )
+
+(define (setDir2 objeto dir cont cabeza)
+  (if (= cont 3)
+      (if (number? dir)
+          (append (append cabeza (list dir)) (cdr objeto))
+          #f
+          )
+      (setDir2 (cdr objeto) dir (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+(define (setPasos objeto pasos)
+  (setPasos2 objeto pasos 0 (list))
+  )
+
+(define (setPasos2 objeto pasos cont cabeza)
+  (if (= cont 3)
+      (if (number? pasos)
+          (append (append cabeza (list pasos)) (cdr objeto))
+          #f
+          )
+      (setPasos2 (cdr objeto) pasos (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+(define (setCaracter objeto caracter)
+  (setCaracter2 objeto caracter 0 (list))
+  )
+
+(define (setCaracter2 objeto caracter cont cabeza)
+  (if (= cont 3)
+      (if (string? caracter)
+          (append (append cabeza (list caracter)) (cdr objeto))
+          #f
+          )
+      (setCaracter2 (cdr objeto) caracter (+ cont 1) (append cabeza (list (car objeto))))
+      )
+  )
+
+;################################################################
+
+;################################################################
 ;se debe usar recursion contraria a createScene (cola)
 
 (define (checkSpace scene)
